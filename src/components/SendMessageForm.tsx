@@ -28,6 +28,7 @@ const SendMessageForm: React.FC = () => {
     return (
         <Form onSubmit={handleSubmit}>
             <Form.Group controlId="recipient">
+                <br />
                 <Form.Label>Recipient:</Form.Label>
                 <Form.Control
                     type="text"
@@ -42,12 +43,12 @@ const SendMessageForm: React.FC = () => {
                     ))}
                 </datalist>
             </Form.Group>
-
+            <br />
             <Form.Group controlId="title">
                 <Form.Label>Title:</Form.Label>
                 <Form.Control type="text" placeholder="Enter title" value={title} onChange={handleTitleChange} />
             </Form.Group>
-
+            <br />
             <Form.Group controlId="message">
                 <Form.Label>Message:</Form.Label>
                 <Form.Control as="textarea" rows={3} value={message} onChange={handleMessageChange} />
