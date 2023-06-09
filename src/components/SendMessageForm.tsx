@@ -7,24 +7,25 @@ const SendMessageForm: React.FC = () => {
     const initialValues = {
         recipient: '',
         title: '',
-        message: '',
+        message: ''
     };
 
     const validationSchema = Yup.object({
         recipient: Yup.string().required('Recipient is required'),
         title: Yup.string().required('Title is required'),
-        message: Yup.string().required('Message is required'),
+        message: Yup.string().required('Message is required')
     });
-
-    const handleSubmit = (values: any) => {
-        // Handle message submission logic here
-        console.log(values);
-    };
 
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: handleSubmit,
+        onSubmit: (values, formikHelpers) => {
+            // Handle message submission logic here
+            console.log(values);
+            setTimeout(() => {
+                formikHelpers.setSubmitting(false);
+            }, 1000);
+        }
     });
 
     const recipients = ['John', 'Jane', 'Alice', 'Bob']; // Replace with your own recipient data
@@ -75,8 +76,8 @@ const SendMessageForm: React.FC = () => {
 
             <br />
 
-            <Button variant="primary" type="submit">
-                Send Message
+            <Button variant="primary" type="submit" disabled={!formik.isValid || formik.isSubmitting}>
+                {formik.isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
         </Form>
     );
