@@ -32,6 +32,7 @@ const SendMessageForm: React.FC = () => {
 
     return (
         <Form onSubmit={formik.handleSubmit}>
+            <br />
             <Form.Group controlId="recipient">
                 <Form.Label>Recipient:</Form.Label>
                 <Form.Control
@@ -49,7 +50,7 @@ const SendMessageForm: React.FC = () => {
                     <Form.Text className="text-danger">{formik.errors.recipient}</Form.Text>
                 )}
             </Form.Group>
-
+            <br />
             <Form.Group controlId="title">
                 <Form.Label>Title:</Form.Label>
                 <Form.Control
@@ -61,7 +62,7 @@ const SendMessageForm: React.FC = () => {
                     <Form.Text className="text-danger">{formik.errors.title}</Form.Text>
                 )}
             </Form.Group>
-
+            <br />
             <Form.Group controlId="message">
                 <Form.Label>Message:</Form.Label>
                 <Form.Control
@@ -73,9 +74,7 @@ const SendMessageForm: React.FC = () => {
                     <Form.Text className="text-danger">{formik.errors.message}</Form.Text>
                 )}
             </Form.Group>
-
             <br />
-
             <Button variant="primary" type="submit" disabled={!formik.isValid || formik.isSubmitting}>
                 {formik.isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
