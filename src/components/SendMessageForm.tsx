@@ -2,7 +2,11 @@ import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { io } from 'socket.io-client';
 import { Message } from '../interfaces';
+import { REACT_APP_API_URI } from '../constants';
+
+const socket = io(REACT_APP_API_URI);
 
 const SendMessageForm: React.FC = () => {
     const initialValues: Message = {
@@ -21,11 +25,8 @@ const SendMessageForm: React.FC = () => {
         initialValues,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
-            // Handle message submission logic here
-            console.log(values);
-            setTimeout(() => {
-                formikHelpers.setSubmitting(false);
-            }, 1000);
+            socket.emit('sendMessage', values);
+            formikHelpers.resetForm();
         }
     });
 
