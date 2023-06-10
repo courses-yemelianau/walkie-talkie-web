@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { Alert, ListGroup } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 import { ReceivedMessage } from '../interfaces';
 import { REACT_APP_API_URI, Status } from '../constants';
@@ -36,11 +36,11 @@ const ReceivedMessages: React.FC = () => {
     }
 
     if (status === Status.Loading) {
-        return <h2>Loading...</h2>;
+        return <Alert variant="info">Loading...</Alert>;
     }
 
     if (status === Status.Failed) {
-        return <h2>{message}</h2>;
+        return <Alert variant="danger">{message}</Alert>;
     }
 
     return (
