@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ListGroup } from 'react-bootstrap';
 import { ReceivedMessage } from '../interfaces';
 
 const ReceivedMessages: React.FC = () => {
@@ -18,16 +19,17 @@ const ReceivedMessages: React.FC = () => {
     }, []);
 
     return (
-        <div>
+        <>
             <h2>Received Messages:</h2>
-            {messages.map((message, index) => (
-                <div key={index}>
-                    <h4>{message.title}</h4>
-                    <p>{message.message}</p>
-                    <hr />
-                </div>
-            ))}
-        </div>
+            <ListGroup>
+                {messages.map((message, index) => (
+                    <ListGroup.Item key={index}>
+                        <h4>{message.title}</h4>
+                        <p>{message.message}</p>
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+        </>
     );
 };
 
