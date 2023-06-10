@@ -13,5 +13,6 @@ export enum Status {
 }
 
 export const {
-    NODE_ENV = Env.Development
+    NODE_ENV = Env.Development,
+    REACT_APP_API_URI = ''
 } = process.env;

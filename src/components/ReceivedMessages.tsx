@@ -1,22 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import { io } from 'socket.io-client';
 import { ReceivedMessage } from '../interfaces';
+import { REACT_APP_API_URI } from '../constants';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { fetchMessagesFulfilled, fetchMessagesPending, fetchMessagesRejected } from '../redux/messageSlice';
+
+const socket = io(REACT_APP_API_URI);
 
 const ReceivedMessages: React.FC = () => {
-    const [messages, setMessages] = useState<ReceivedMessage[]>([]);
+    const dispatch = useAppDispatch();
+    const { username } = useAppSelector((state) => state.app);
+    const { messages, message, status } = useAppSelector((state) => state.message);
 
     useEffect(() => {
-        // Fetch messages from the server
-        // You'll need to implement the server-side logic for retrieving messages
+        dispatch(fetchMessagesPending());
+        fetch(`/messages/${username}`)
+            .then((response) => response.json())
+            .then((data) => dispatch(fetchMessagesFulfilled(data)))
+            .catch((error) => dispatch(fetchMessagesRejected(error.message)));
 
-        // Example mock data
-        const mockMessages: ReceivedMessage[] = [
-            { username: 'John', title: 'Message 1', message: 'Hello, John!' },
-            { username: 'John', title: 'Message 2', message: 'How are you?' },
-        ];
+        socket.on('messageReceived', (message: ReceivedMessage) => {
+            fetchMessagesFulfilled([...messages, message]);
+        });
 
-        setMessages(mockMessages);
-    }, []);
+        return () => {
+            socket.off('messageReceived');
+        };
+    }, [dispatch, messages, username]);
 
     return (
         <>

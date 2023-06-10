@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { MessageState } from './state';
 import { Status } from '../constants';
-import { Message } from '../interfaces';
+import { ReceivedMessage } from '../interfaces';
 
 const initialState: MessageState = {
     status: Status.Idle,
@@ -16,7 +16,7 @@ export const messageSlice = createSlice({
         fetchMessagesPending: (state) => {
             state.status = Status.Loading;
         },
-        fetchMessagesFulfilled: (state, action: PayloadAction<Message[]>) => {
+        fetchMessagesFulfilled: (state, action: PayloadAction<ReceivedMessage[]>) => {
             state.status = Status.Succeeded;
             state.messages = action.payload;
             state.message = '';
