@@ -2,15 +2,16 @@ import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Message } from '../interfaces';
 
 const SendMessageForm: React.FC = () => {
-    const initialValues = {
+    const initialValues: Message = {
         recipient: '',
         title: '',
         message: ''
     };
 
-    const validationSchema = Yup.object({
+    const validationSchema = Yup.object<Message>({
         recipient: Yup.string().required('Recipient is required'),
         title: Yup.string().required('Title is required'),
         message: Yup.string().required('Message is required')
