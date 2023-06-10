@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 import { ReceivedMessage } from '../interfaces';
-import { REACT_APP_API_URI } from '../constants';
+import { REACT_APP_API_URI, Status } from '../constants';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchMessagesFulfilled, fetchMessagesPending, fetchMessagesRejected } from '../redux/messageSlice';
 
@@ -19,7 +19,9 @@ const ReceivedMessages: React.FC = () => {
             .then((response) => response.json())
             .then((data) => dispatch(fetchMessagesFulfilled(data)))
             .catch((error) => dispatch(fetchMessagesRejected(error.message)));
+    }, [dispatch, username]);
 
+    useEffect(() => {
         socket.on('messageReceived', (message: ReceivedMessage) => {
             fetchMessagesFulfilled([...messages, message]);
         });
@@ -27,7 +29,19 @@ const ReceivedMessages: React.FC = () => {
         return () => {
             socket.off('messageReceived');
         };
-    }, [dispatch, messages, username]);
+    }, [messages]);
+
+    if (status === Status.Idle) {
+        return null;
+    }
+
+    if (status === Status.Loading) {
+        return <h2>Loading...</h2>;
+    }
+
+    if (status === Status.Failed) {
+        return <h2>{message}</h2>;
+    }
 
     return (
         <>
