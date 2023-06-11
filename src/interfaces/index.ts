@@ -1,10 +1,11 @@
-export interface Message {
-    recipient: string;
-    title: string;
-    message: string;
+export interface User {
+    id?: number;
+    name: string;
 }
 
-export interface ReceivedMessage {
+export interface Message {
+    id?: number;
+    recipientId: number;
     username: string;
     title: string;
     message: string;
