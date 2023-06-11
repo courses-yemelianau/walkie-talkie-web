@@ -1,35 +1,27 @@
 import React, { useEffect } from 'react';
 import { Alert, ListGroup } from 'react-bootstrap';
-import { io } from 'socket.io-client';
-import { ReceivedMessage } from '../interfaces';
-import { REACT_APP_API_URI, Status } from '../constants';
+import { Status } from '../constants';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchMessagesFulfilled, fetchMessagesPending, fetchMessagesRejected } from '../redux/messageSlice';
-
-const socket = io(REACT_APP_API_URI);
+import { getMessages } from '../services/messages.service';
 
 const ReceivedMessages: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { username } = useAppSelector((state) => state.app);
+    const { user } = useAppSelector((state) => state.app);
     const { messages, message, status } = useAppSelector((state) => state.message);
 
     useEffect(() => {
         dispatch(fetchMessagesPending());
-        fetch(`/messages/${username}`)
-            .then((response) => response.json())
-            .then((data) => dispatch(fetchMessagesFulfilled(data)))
-            .catch((error) => dispatch(fetchMessagesRejected(error.message)));
-    }, [dispatch, username]);
-
-    useEffect(() => {
-        socket.on('messageReceived', (message: ReceivedMessage) => {
-            fetchMessagesFulfilled([...messages, message]);
-        });
+        const interval = setInterval(() => {
+            getMessages(user.id!)
+                .then(({ data: { data } }) => dispatch(fetchMessagesFulfilled(data)))
+                .catch((error) => dispatch(fetchMessagesRejected(error.message)));
+        }, 1000);
 
         return () => {
-            socket.off('messageReceived');
+            clearInterval(interval);
         };
-    }, [messages]);
+    }, [dispatch, user]);
 
     if (status === Status.Idle) {
         return null;
@@ -47,8 +39,9 @@ const ReceivedMessages: React.FC = () => {
         <>
             <h2>Received Messages:</h2>
             <ListGroup>
-                {messages.map((message, index) => (
-                    <ListGroup.Item key={index}>
+                {messages.map((message) => (
+                    <ListGroup.Item key={message.id}>
+                        <h6>{message.username}</h6>
                         <h4>{message.title}</h4>
                         <p>{message.message}</p>
                     </ListGroup.Item>
