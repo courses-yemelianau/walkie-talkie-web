@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Alert, ListGroup } from 'react-bootstrap';
+import { Alert, Accordion, Row, Col } from 'react-bootstrap';
 import { Status } from '../constants';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchMessagesFulfilled, fetchMessagesPending, fetchMessagesRejected } from '../redux/messageSlice';
@@ -38,15 +38,30 @@ const ReceivedMessages: React.FC = () => {
     return (
         <>
             <h2>Received Messages:</h2>
-            <ListGroup>
+            <Accordion>
                 {messages.map((message) => (
-                    <ListGroup.Item key={message.id}>
-                        <h6>{message.username}</h6>
-                        <h4>{message.title}</h4>
-                        <p>{message.message}</p>
-                    </ListGroup.Item>
+                    <Accordion.Item key={message.id} eventKey={message.id.toString()}>
+                        <Accordion.Header>
+                            <Row>
+                                <Col xs={8}>
+                                    <h6>{message.username}</h6>
+                                </Col>
+                                <Col xs={8}>
+                                    <span>{'timestamp'}</span>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={8}>
+                                    <h4>{message.title}</h4>
+                                </Col>
+                            </Row>
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <p>{message.message}</p>
+                        </Accordion.Body>
+                    </Accordion.Item>
                 ))}
-            </ListGroup>
+            </Accordion>
         </>
     );
 };

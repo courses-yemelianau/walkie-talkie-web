@@ -4,7 +4,7 @@ export interface User {
 }
 
 export interface Message {
-    id?: number;
+    id: number;
     recipientId: number;
     username: string;
     title: string;
