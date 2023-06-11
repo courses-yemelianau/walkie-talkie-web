@@ -9,4 +9,7 @@ export interface Message {
     username: string;
     title: string;
     message: string;
+
+    createdAt: string;
+    updatedAt: string;
 }

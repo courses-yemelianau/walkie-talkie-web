@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Alert, Accordion, Row, Col } from 'react-bootstrap';
+import { DateTime } from 'luxon';
 import { Status } from '../constants';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchMessagesFulfilled, fetchMessagesPending, fetchMessagesRejected } from '../redux/messageSlice';
@@ -46,12 +47,12 @@ const ReceivedMessages: React.FC = () => {
                                 <Col xs={8}>
                                     <h6>{message.username}</h6>
                                 </Col>
-                                <Col xs={8}>
-                                    <span>{'timestamp'}</span>
+                                <Col xs={10}>
+                                    <span>{DateTime.fromISO(message.createdAt).toLocaleString(DateTime.DATETIME_SHORT)}</span>
                                 </Col>
                             </Row>
                             <Row>
-                                <Col xs={8}>
+                                <Col xs={16}>
                                     <h4>{message.title}</h4>
                                 </Col>
                             </Row>
