@@ -16,7 +16,7 @@ const ReceivedMessages: React.FC = () => {
             getMessages(user.id!)
                 .then(({ data: { data } }) => dispatch(fetchMessagesFulfilled(data)))
                 .catch((error) => dispatch(fetchMessagesRejected(error.message)));
-        }, 1000);
+        }, 5000);
 
         return () => {
             clearInterval(interval);

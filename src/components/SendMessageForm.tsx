@@ -41,7 +41,7 @@ const SendMessageForm: React.FC = () => {
             getUsers()
                 .then(({ data: { data } }) => setRecipients(data))
                 .catch((error) => console.log(error));
-        }, 1000);
+        }, 5000);
 
         return () => {
             clearInterval(interval);
