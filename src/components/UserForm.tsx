@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Button, Badge, Row, Col } from 'react-bootstrap';
+import { createUser } from '../services/users.service';
+import { User } from '../interfaces';
 
 interface Props {
     name: string;
-    onSubmit: (name: string) => void;
+    onSubmit: (user: User) => void;
 }
 
 const UserFrom: React.FC<Props> = (props: Props) => {
@@ -16,8 +18,12 @@ const UserFrom: React.FC<Props> = (props: Props) => {
     };
 
     const handleSubmit = () => {
-        onSubmit(trimmedDraft);
-        setDraft('');
+        createUser({ name: trimmedDraft })
+            .then(({ data: { data } }) => {
+                onSubmit(data);
+                setDraft('');
+            })
+            .catch(reason => console.log(reason));
     };
 
     return (
