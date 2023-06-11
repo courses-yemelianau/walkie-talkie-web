@@ -1,8 +1,8 @@
 import { Status } from '../constants';
-import { ReceivedMessage } from '../interfaces';
+import { Message, User } from '../interfaces';
 
 export interface AppState {
-    username: string;
+    user: User;
 }
 
 export interface FetchState {
@@ -11,5 +11,5 @@ export interface FetchState {
 }
 
 export interface MessageState extends FetchState {
-    messages: ReceivedMessage[];
+    messages: Message[];
 }
