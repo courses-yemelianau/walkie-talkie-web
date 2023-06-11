@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { io } from 'socket.io-client';
-import { Message } from '../interfaces';
-import { REACT_APP_API_URI } from '../constants';
-
-const socket = io(REACT_APP_API_URI);
+import { Message, User } from '../interfaces';
+import { getUsers } from '../services/users.service';
+import { createMessage } from '../services/messages.service';
+import { useAppSelector } from '../hooks';
 
 const SendMessageForm: React.FC = () => {
-    const initialValues: Message = {
+    const initialValues = {
         recipient: '',
         title: '',
         message: ''
@@ -21,16 +20,33 @@ const SendMessageForm: React.FC = () => {
         message: Yup.string().required('Message is required')
     });
 
+    const { user } = useAppSelector(state => state.app);
+
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: (values, formikHelpers) => {
-            socket.emit('sendMessage', values);
-            formikHelpers.resetForm();
+            createMessage({ ...values, username: user.name })
+                .then(() => {
+                    formikHelpers.resetForm();
+                })
+                .catch(reason => console.log(reason));
         }
     });
 
-    const recipients = ['John', 'Jane', 'Alice', 'Bob']; // Replace with your own recipient data
+    const [recipients, setRecipients] = useState<User[]>([]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getUsers()
+                .then(({ data: { data } }) => setRecipients(data))
+                .catch((error) => console.log(error));
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
     return (
         <Form onSubmit={formik.handleSubmit}>
@@ -44,8 +60,8 @@ const SendMessageForm: React.FC = () => {
                     list="recipients"
                 />
                 <datalist id="recipients">
-                    {recipients.map((recipient, index) => (
-                        <option key={index} value={recipient} />
+                    {recipients.map((recipient) => (
+                        <option key={recipient.id} value={recipient.name} />
                     ))}
                 </datalist>
                 {formik.touched.recipient && formik.errors.recipient && (
